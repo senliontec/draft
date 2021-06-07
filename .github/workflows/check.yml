@@ -11,21 +11,48 @@ defaults:
 
 jobs:
   run-checks:
-    name: Run checks
-    runs-on: ubuntu-20.04
+    name: Run checks on ${{matrix.cfg.name}}
+    runs-on: ${{matrix.cfg.os}}
+
+    strategy:
+      matrix:
+        cfg:
+          - { name: 'Linux', os: 'ubuntu-20.04' }
+          - { name: 'MacOS', os: 'macos-10.15' }
 
     steps:
       - name: checkout
         uses: actions/checkout@v2
 
+      - name: install GNU tools
+        if: matrix.cfg.os == 'macos-10.15'
+        run: |
+          brew install gnu-sed
+          echo "/usr/local/opt/gnu-sed/libexec/gnubin" >> ${GITHUB_PATH}
+
       - name: check-source.sh
         run: ../tools/check-source.sh
 
       - name: update-apt-cache
+        if: matrix.cfg.os == 'ubuntu-20.04'
         run: sudo apt-get update
 
-      - name: install
+      - name: install (Linux)
+        if: matrix.cfg.os == 'ubuntu-20.04'
         run: sudo apt-get install latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended lmodern
+
+      - name: install (MacOS, Part 1/2)
+        if: matrix.cfg.os == 'macos-10.15'
+        run: |
+          brew install basictex
+          find /usr/local/texlive -name tlmgr
+          echo "/usr/local/texlive/2021basic/bin/universal-darwin" >> ${GITHUB_PATH}
+
+      - name: install (MacOS, Part 2/2)
+        if: matrix.cfg.os == 'macos-10.15'
+        run: |
+          sudo tlmgr update --self
+          sudo tlmgr install latexmk isodate substr relsize ulem fixme rsfs extract layouts enumitem l3packages l3kernel imakeidx splitindex xstring
 
       - name: make
         run: make quiet
