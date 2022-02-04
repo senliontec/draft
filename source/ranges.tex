@@ -5822,7 +5822,7 @@ Equivalent to: \tcode{return x.\exposid{outer_} == y.\exposid{end_};}
 
 \pnum
 \tcode{join_with_view} takes a \libconcept{view} and a delimiter, and
-flattens the view,
+flattens the \libconcept{view},
 inserting every element of the delimiter
 in between elements of the \libconcept{view}.
 The delimiter can be a single element or a \libconcept{view} of elements.
@@ -5871,7 +5871,9 @@ namespace std::ranges {
                                                             // when \tcode{!is_reference_v<\exposid{InnerRng}>}
     Pattern @\exposid{pattern_}@ = Pattern();                           // \expos
 
+    // \ref{range.join.with.iterator}, class template \tcode{join_with_view::\exposid{iterator}}
     template<bool Const> struct @\exposid{iterator}@;                   // \expos
+    // \ref{range.join.with.sentinel}, class template \tcode{join_with_view::\exposid{sentinel}}
     template<bool Const> struct @\exposid{sentinel}@;                   // \expos
 
   public:
@@ -5901,7 +5903,7 @@ namespace std::ranges {
 
     constexpr auto end() {
       if constexpr (@\libconcept{forward_range}@<V> &&
-                    is_reference_v<InnerRng> && @\libconcept{forward_range}@<@\exposid{InnerRng}@> &&
+                    is_reference_v<@\exposid{InnerRng}@> && @\libconcept{forward_range}@<@\exposid{InnerRng}@> &&
                     @\libconcept{common_range}@<V> && @\libconcept{common_range}@<@\exposid{InnerRng}@>)
         return @\exposid{iterator}@<@\exposconcept{simple-view}@<V> && @\exposconcept{simple-view}@<Pattern>>{*this, ranges::end(@\exposid{base_}@)};
       else
@@ -5910,9 +5912,9 @@ namespace std::ranges {
     constexpr auto end() const
       requires @\libconcept{input_range}@<const V> && @\libconcept{forward_range}@<const Pattern> &&
                is_reference_v<range_reference_t<const V>> {
-      using @\exposid{InnerConstRng}@ = range_reference_t<const V>;
-      if constexpr (@\libconcept{forward_range}@<const V> && @\libconcept{forward_range}@<@\exposid{InnerConstRng}@> &&
-                    @\libconcept{common_range}@<const V> && common_range<@\exposid{InnerConstRng}@>)
+      using InnerConstRng = range_reference_t<const V>;
+      if constexpr (@\libconcept{forward_range}@<const V> && @\libconcept{forward_range}@<InnerConstRng> &&
+                    @\libconcept{common_range}@<const V> && common_range<InnerConstRng>)
         return @\exposid{iterator}@<true>{*this, ranges::end(@\exposid{base_}@)};
       else
         return @\exposid{sentinel}@<true>{*this};
@@ -5922,7 +5924,7 @@ namespace std::ranges {
   template<class R, class P>
     join_with_view(R&&, P&&) -> join_with_view<views::all_t<R>, views::all_t<P>>;
 
-  template<input_range R>
+  template<@\libconcept{input_range}@ R>
     join_with_view(R&&, range_value_t<range_reference_t<R>>)
       -> join_with_view<views::all_t<R>, single_view<range_value_t<range_reference_t<R>>>>;
 }
@@ -5940,7 +5942,7 @@ Initializes \exposid{base_} with \tcode{std::move(base)} and
 \end{itemdescr}
 
 \begin{itemdecl}
-template<input_range R>
+template<@\libconcept{input_range}@ R>
   requires @\libconcept{constructible_from}@<V, views::all_t<R>> &&
            @\libconcept{constructible_from}@<Pattern, single_view<range_value_t<@\exposid{InnerRng}@>>>
 constexpr join_with_view(R&& r, range_value_t<@\exposid{InnerRng}@> e);
@@ -6005,7 +6007,7 @@ namespace std::ranges {
         requires @\exposid{ref-is-glvalue}@ && @\libconcept{bidirectional_range}@<@\exposid{Base}@> &&
                  @\exposconcept{bidirectional-common}@<@\exposid{InnerBase}@> && @\exposconcept{bidirectional-common}@<@\exposid{PatternBase}@>;
     constexpr @\exposid{iterator}@ operator--(int)
-        requires @\exposid{ref-is-glvalue}@ && @\libconcept{bidirectional_range}@<Base> &&
+        requires @\exposid{ref-is-glvalue}@ && @\libconcept{bidirectional_range}@<@\exposid{Base}@> &&
                  @\exposconcept{bidirectional-common}@<@\exposid{InnerBase}@> && @\exposconcept{bidirectional-common}@<@\exposid{PatternBase}@>;
 
     friend constexpr bool operator==(const @\exposid{iterator}@& x, const @\exposid{iterator}@& y)
@@ -6123,7 +6125,7 @@ constexpr auto&& @\exposid{get-inner}@(const @\exposid{OuterIter}@& x);
 \effects
 Equivalent to:
 \begin{codeblock}
-if constexpr (ref-is-glvalue)
+if constexpr (@\exposid{ref-is-glvalue}@)
   return *x;
 else
   return *@\exposid{parent_}@->@\exposid{inner_}@;
@@ -6312,7 +6314,7 @@ constexpr @\exposid{iterator}@ operator--(int)
 \effects
 Equivalent to:
 \begin{codeblock}
-iterator tmp = *this;
+@\exposid{iterator}@ tmp = *this;
 --*this;
 return tmp;
 \end{codeblock}
@@ -6359,7 +6361,7 @@ namespace std::ranges {
 \end{codeblock}
 
 \begin{itemdecl}
-constexpr explicit sentinel(Parent& parent);
+constexpr explicit @\exposid{sentinel}@(@\exposid{Parent}@& parent);
 \end{itemdecl}
 
 \begin{itemdescr}
