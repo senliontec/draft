@@ -10055,7 +10055,7 @@ Equivalent to \tcode{return x.\exposid{inner_} - y.\exposid{inner_};}
 
 \pnum
 \tcode{chunk_by_view} takes a \libconcept{view} and a predicate, and
-splits the \libconcept{view} into subranges
+splits the \libconcept{view} into \tcode{subrange}s
 between each pair of adjacent elements
 for which the predicate returns \tcode{false}.
 
@@ -10079,8 +10079,8 @@ for (auto r : v | views::chunk_by(ranges::less_equal{})) {
   }
   cout << "] ";
 }
-// The above prints: [1, 2, 2, 3] [0, 4, 5] [2]
 \end{codeblock}
+The above prints: \tcode{[1, 2, 2, 3] [0, 4, 5] [2]}
 \end{example}
 
 \rSec3[range.chunk.by.view]{Class template \tcode{chunk_by_view}}
@@ -10089,7 +10089,7 @@ for (auto r : v | views::chunk_by(ranges::less_equal{})) {
 namespace std::ranges {
   template<@\libconcept{forward_range}@ V, @\libconcept{indirect_binary_predicate}@<iterator_t<V>, iterator_t<V>> Pred>
     requires @\libconcept{view}@<V> && is_object_v<Pred>
-  class chunk_by_view : public view_interface<chunk_by_view<V, Pred>>{
+  class chunk_by_view : public view_interface<chunk_by_view<V, Pred>> {
     V @\exposid{base_}@ = V();                       // \expos
     @\exposid{copyable-box}@<Pred> @\exposid{pred_}@ = Pred();  // \expos
 
@@ -10126,9 +10126,10 @@ constexpr explicit chunk_by_view(V base, Pred pred);
 \pnum
 \effects
 Initializes \exposid{base_} with \tcode{std::move(base)} and
-@\exposid{pred_}@ with \tcode{std::move(pred)}.
+\exposid{pred_} with \tcode{std::move(pred)}.
 \end{itemdescr}
 
+\indexlibrarymember{pred}{chunk_by_view}%
 \begin{itemdecl}
 constexpr const Pred& pred() const;
 \end{itemdecl}
@@ -10140,7 +10141,7 @@ Equivalent to: \tcode{return *\exposid{pred_};}
 \end{itemdescr}
 
 \begin{itemdecl}
-constexpr iterator begin();
+constexpr @\exposid{iterator}@ begin();
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -10155,7 +10156,7 @@ constexpr iterator begin();
 \pnum
 \remarks
 In order to provide
-the amortized constant-time complexity required by the range concept,
+the amortized constant-time complexity required by the \libconcept{range} concept,
 this function caches the result within the \tcode{chunk_by_view}
 for use on subsequent calls.
 \end{itemdescr}
@@ -10209,11 +10210,11 @@ constexpr iterator_t<V> @\exposid{find-prev}@(iterator_t<V> current) requires @\
 
 \pnum
 \returns
-An \exposid{iterator} \tcode{i}
+An iterator \tcode{i}
 in the range \range{ranges::begin(\exposid{base_})}{current} such that:
 \begin{itemize}
 \item
-\tcode{ranges::adjacent_find(i, current, not_fn(ref(*\exposid{pred_})))} is equal to \exposid{current}; and
+\tcode{ranges::adjacent_find(i, current, not_fn(ref(*\exposid{pred_})))} is equal to \tcode{current}; and
 \item
 if \tcode{i} is not equal to \tcode{ranges::begin(\exposid{base_})},
 then \tcode{bool(invoke(*\exposid{pred_}, *ranges::prev(i), *i))}
