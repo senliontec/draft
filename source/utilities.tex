@@ -7657,24 +7657,24 @@ namespace std {
   template<class T, class D> class unique_ptr<T[], D>;
 
   template<class T, class... Args>
-    unique_ptr<T> make_unique(Args&&... args);                                  // \tcode{T} is not array
+    constexpr unique_ptr<T> make_unique(Args&&... args);                        // \tcode{T} is not array
   template<class T>
-    unique_ptr<T> make_unique(size_t n);                                        // \tcode{T} is \tcode{U[]}
+    constexpr unique_ptr<T> make_unique(size_t n);                              // \tcode{T} is \tcode{U[]}
   template<class T, class... Args>
     @\unspecnc@ make_unique(Args&&...) = delete;                                // \tcode{T} is \tcode{U[N]}
 
   template<class T>
-    unique_ptr<T> make_unique_for_overwrite();                                  // \tcode{T} is not array
+    constexpr unique_ptr<T> make_unique_for_overwrite();                        // \tcode{T} is not array
   template<class T>
-    unique_ptr<T> make_unique_for_overwrite(size_t n);                          // \tcode{T} is \tcode{U[]}
+    constexpr unique_ptr<T> make_unique_for_overwrite(size_t n);                // \tcode{T} is \tcode{U[]}
   template<class T, class... Args>
     @\unspecnc@ make_unique_for_overwrite(Args&&...) = delete;                  // \tcode{T} is \tcode{U[N]}
 
   template<class T, class D>
-    void swap(unique_ptr<T, D>& x, unique_ptr<T, D>& y) noexcept;
+    constexpr void swap(unique_ptr<T, D>& x, unique_ptr<T, D>& y) noexcept;
 
   template<class T1, class D1, class T2, class D2>
-    bool operator==(const unique_ptr<T1, D1>& x, const unique_ptr<T2, D2>& y);
+    constexpr bool operator==(const unique_ptr<T1, D1>& x, const unique_ptr<T2, D2>& y);
   template<class T1, class D1, class T2, class D2>
     bool operator<(const unique_ptr<T1, D1>& x, const unique_ptr<T2, D2>& y);
   template<class T1, class D1, class T2, class D2>
@@ -7691,26 +7691,26 @@ namespace std {
       operator<=>(const unique_ptr<T1, D1>& x, const unique_ptr<T2, D2>& y);
 
   template<class T, class D>
-    bool operator==(const unique_ptr<T, D>& x, nullptr_t) noexcept;
+    constexpr bool operator==(const unique_ptr<T, D>& x, nullptr_t) noexcept;
   template<class T, class D>
-    bool operator<(const unique_ptr<T, D>& x, nullptr_t);
+    constexpr bool operator<(const unique_ptr<T, D>& x, nullptr_t);
   template<class T, class D>
-    bool operator<(nullptr_t, const unique_ptr<T, D>& y);
+    constexpr bool operator<(nullptr_t, const unique_ptr<T, D>& y);
   template<class T, class D>
-    bool operator>(const unique_ptr<T, D>& x, nullptr_t);
+    constexpr bool operator>(const unique_ptr<T, D>& x, nullptr_t);
   template<class T, class D>
-    bool operator>(nullptr_t, const unique_ptr<T, D>& y);
+    constexpr bool operator>(nullptr_t, const unique_ptr<T, D>& y);
   template<class T, class D>
-    bool operator<=(const unique_ptr<T, D>& x, nullptr_t);
+    constexpr bool operator<=(const unique_ptr<T, D>& x, nullptr_t);
   template<class T, class D>
-    bool operator<=(nullptr_t, const unique_ptr<T, D>& y);
+    constexpr bool operator<=(nullptr_t, const unique_ptr<T, D>& y);
   template<class T, class D>
-    bool operator>=(const unique_ptr<T, D>& x, nullptr_t);
+    constexpr bool operator>=(const unique_ptr<T, D>& x, nullptr_t);
   template<class T, class D>
-    bool operator>=(nullptr_t, const unique_ptr<T, D>& y);
+    constexpr bool operator>=(nullptr_t, const unique_ptr<T, D>& y);
   template<class T, class D>
     requires @\libconcept{three_way_comparable}@<typename unique_ptr<T, D>::pointer>
-    compare_three_way_result_t<typename unique_ptr<T, D>::pointer>
+    constexpr compare_three_way_result_t<typename unique_ptr<T, D>::pointer>
       operator<=>(const unique_ptr<T, D>& x, nullptr_t);
 
   template<class E, class T, class Y, class D>
@@ -8988,15 +8988,15 @@ an incomplete type.
 namespace std {
   template<class T> struct default_delete {
     constexpr default_delete() noexcept = default;
-    template<class U> default_delete(const default_delete<U>&) noexcept;
-    void operator()(T*) const;
+    template<class U> constexpr default_delete(const default_delete<U>&) noexcept;
+    constexpr void operator()(T*) const;
   };
 }
 \end{codeblock}
 
 \indexlibraryctor{default_delete}%
 \begin{itemdecl}
-template<class U> default_delete(const default_delete<U>& other) noexcept;
+template<class U> constexpr default_delete(const default_delete<U>& other) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9012,7 +9012,7 @@ from another \tcode{default_delete<U>} object.
 
 \indexlibrarymember{operator()}{default_delete}%
 \begin{itemdecl}
-void operator()(T* ptr) const;
+constexpr void operator()(T* ptr) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9031,15 +9031,15 @@ Calls \keyword{delete} on \tcode{ptr}.
 namespace std {
   template<class T> struct default_delete<T[]> {
     constexpr default_delete() noexcept = default;
-    template<class U> default_delete(const default_delete<U[]>&) noexcept;
-    template<class U> void operator()(U* ptr) const;
+    template<class U> constexpr default_delete(const default_delete<U[]>&) noexcept;
+    template<class U> constexpr void operator()(U* ptr) const;
   };
 }
 \end{codeblock}
 
 \indexlibraryctor{default_delete}
 \begin{itemdecl}
-template<class U> default_delete(const default_delete<U[]>& other) noexcept;
+template<class U> constexpr default_delete(const default_delete<U[]>& other) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9054,7 +9054,7 @@ Constructs a \tcode{default_delete} object from another \tcode{default_delete<U[
 
 \indexlibrarymember{operator()}{default_delete}%
 \begin{itemdecl}
-template<class U> void operator()(U* ptr) const;
+template<class U> constexpr void operator()(U* ptr) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9086,35 +9086,35 @@ namespace std {
 
     // \ref{unique.ptr.single.ctor}, constructors
     constexpr unique_ptr() noexcept;
-    explicit unique_ptr(pointer p) noexcept;
-    unique_ptr(pointer p, @\seebelow@ d1) noexcept;
-    unique_ptr(pointer p, @\seebelow@ d2) noexcept;
-    unique_ptr(unique_ptr&& u) noexcept;
+    constexpr explicit unique_ptr(pointer p) noexcept;
+    constexpr unique_ptr(pointer p, @\seebelow@ d1) noexcept;
+    constexpr unique_ptr(pointer p, @\seebelow@ d2) noexcept;
+    constexpr unique_ptr(unique_ptr&& u) noexcept;
     constexpr unique_ptr(nullptr_t) noexcept;
     template<class U, class E>
-      unique_ptr(unique_ptr<U, E>&& u) noexcept;
+      constexpr unique_ptr(unique_ptr<U, E>&& u) noexcept;
 
     // \ref{unique.ptr.single.dtor}, destructor
-    ~unique_ptr();
+    constexpr ~unique_ptr();
 
     // \ref{unique.ptr.single.asgn}, assignment
-    unique_ptr& operator=(unique_ptr&& u) noexcept;
+    constexpr unique_ptr& operator=(unique_ptr&& u) noexcept;
     template<class U, class E>
-      unique_ptr& operator=(unique_ptr<U, E>&& u) noexcept;
-    unique_ptr& operator=(nullptr_t) noexcept;
+      constexpr unique_ptr& operator=(unique_ptr<U, E>&& u) noexcept;
+    constexpr unique_ptr& operator=(nullptr_t) noexcept;
 
     // \ref{unique.ptr.single.observers}, observers
-    add_lvalue_reference_t<T> operator*() const noexcept(@\seebelow@);
-    pointer operator->() const noexcept;
-    pointer get() const noexcept;
-    deleter_type& get_deleter() noexcept;
-    const deleter_type& get_deleter() const noexcept;
-    explicit operator bool() const noexcept;
+    constexpr add_lvalue_reference_t<T> operator*() const noexcept(@\seebelow@);
+    constexpr pointer operator->() const noexcept;
+    constexpr pointer get() const noexcept;
+    constexpr deleter_type& get_deleter() noexcept;
+    constexpr const deleter_type& get_deleter() const noexcept;
+    constexpr explicit operator bool() const noexcept;
 
     // \ref{unique.ptr.single.modifiers}, modifiers
-    pointer release() noexcept;
-    void reset(pointer p = pointer()) noexcept;
-    void swap(unique_ptr& u) noexcept;
+    constexpr pointer release() noexcept;
+    constexpr void reset(pointer p = pointer()) noexcept;
+    constexpr void swap(unique_ptr& u) noexcept;
 
     // disable copy from lvalue
     unique_ptr(const unique_ptr&) = delete;
@@ -9187,7 +9187,7 @@ returns a reference to the stored deleter.
 
 \indexlibraryctor{unique_ptr}%
 \begin{itemdecl}
-explicit unique_ptr(pointer p) noexcept;
+constexpr explicit unique_ptr(pointer p) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9220,8 +9220,8 @@ returns a reference to the stored deleter.
 
 \indexlibraryctor{unique_ptr}%
 \begin{itemdecl}
-unique_ptr(pointer p, const D& d) noexcept;
-unique_ptr(pointer p, remove_reference_t<D>&& d) noexcept;
+constexpr unique_ptr(pointer p, const D& d) noexcept;
+constexpr unique_ptr(pointer p, remove_reference_t<D>&& d) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9276,7 +9276,7 @@ unique_ptr<int, const D&> p4(new int, D()); // error: rvalue deleter object comb
 
 \indexlibraryctor{unique_ptr}%
 \begin{itemdecl}
-unique_ptr(unique_ptr&& u) noexcept;
+constexpr unique_ptr(unique_ptr&& u) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9317,7 +9317,7 @@ the same lvalue deleter.
 
 \indexlibraryctor{unique_ptr}%
 \begin{itemdecl}
-template<class U, class E> unique_ptr(unique_ptr<U, E>&& u) noexcept;
+template<class U, class E> constexpr unique_ptr(unique_ptr<U, E>&& u) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9363,7 +9363,7 @@ to the stored deleter that was constructed from
 
 \indexlibrarydtor{unique_ptr}%
 \begin{itemdecl}
-~unique_ptr();
+constexpr ~unique_ptr();
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9385,7 +9385,7 @@ Otherwise \tcode{get_deleter()(get())}.
 
 \indexlibrarymember{operator=}{unique_ptr}%
 \begin{itemdecl}
-unique_ptr& operator=(unique_ptr&& u) noexcept;
+constexpr unique_ptr& operator=(unique_ptr&& u) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9421,7 +9421,7 @@ otherwise \tcode{u.get()} is unchanged.
 
 \indexlibrarymember{operator=}{unique_ptr}%
 \begin{itemdecl}
-template<class U, class E> unique_ptr& operator=(unique_ptr<U, E>&& u) noexcept;
+template<class U, class E> constexpr unique_ptr& operator=(unique_ptr<U, E>&& u) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9458,7 +9458,7 @@ Calls \tcode{reset(u.release())} followed by
 
 \indexlibrarymember{operator=}{unique_ptr}%
 \begin{itemdecl}
-unique_ptr& operator=(nullptr_t) noexcept;
+constexpr unique_ptr& operator=(nullptr_t) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9479,7 +9479,7 @@ As if by \tcode{reset()}.
 
 \indexlibrarymember{operator*}{unique_ptr}%
 \begin{itemdecl}
-add_lvalue_reference_t<T> operator*() const noexcept(noexcept(*declval<pointer>()));
+constexpr add_lvalue_reference_t<T> operator*() const noexcept(noexcept(*declval<pointer>()));
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9495,7 +9495,7 @@ add_lvalue_reference_t<T> operator*() const noexcept(noexcept(*declval<pointer>(
 
 \indexlibrarymember{operator->}{unique_ptr}%
 \begin{itemdecl}
-pointer operator->() const noexcept;
+constexpr pointer operator->() const noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9515,7 +9515,7 @@ The use of this function typically requires that \tcode{T} be a complete type.
 
 \indexlibrarymember{get}{unique_ptr}%
 \begin{itemdecl}
-pointer get() const noexcept;
+constexpr pointer get() const noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9526,8 +9526,8 @@ The stored pointer.
 
 \indexlibrarymember{get_deleter}{unique_ptr}%
 \begin{itemdecl}
-deleter_type& get_deleter() noexcept;
-const deleter_type& get_deleter() const noexcept;
+constexpr deleter_type& get_deleter() noexcept;
+constexpr const deleter_type& get_deleter() const noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9538,7 +9538,7 @@ A reference to the stored deleter.
 
 \indexlibrarymember{operator bool}{unique_ptr}%
 \begin{itemdecl}
-explicit operator bool() const noexcept;
+constexpr explicit operator bool() const noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9551,7 +9551,7 @@ explicit operator bool() const noexcept;
 
 \indexlibrarymember{release}{unique_ptr}%
 \begin{itemdecl}
-pointer release() noexcept;
+constexpr pointer release() noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9567,7 +9567,7 @@ the call to \tcode{release}.
 
 \indexlibrarymember{reset}{unique_ptr}%
 \begin{itemdecl}
-void reset(pointer p = pointer()) noexcept;
+constexpr void reset(pointer p = pointer()) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9597,7 +9597,7 @@ destroys \tcode{*this} since \tcode{this->get()} is no longer a valid expression
 
 \indexlibrarymember{swap}{unique_ptr}%
 \begin{itemdecl}
-void swap(unique_ptr& u) noexcept;
+constexpr void swap(unique_ptr& u) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9627,35 +9627,35 @@ namespace std {
 
     // \ref{unique.ptr.runtime.ctor}, constructors
     constexpr unique_ptr() noexcept;
-    template<class U> explicit unique_ptr(U p) noexcept;
-    template<class U> unique_ptr(U p, @\seebelow@ d) noexcept;
-    template<class U> unique_ptr(U p, @\seebelow@ d) noexcept;
-    unique_ptr(unique_ptr&& u) noexcept;
+    template<class U> constexpr explicit unique_ptr(U p) noexcept;
+    template<class U> constexpr unique_ptr(U p, @\seebelow@ d) noexcept;
+    template<class U> constexpr unique_ptr(U p, @\seebelow@ d) noexcept;
+    constexpr unique_ptr(unique_ptr&& u) noexcept;
     template<class U, class E>
-      unique_ptr(unique_ptr<U, E>&& u) noexcept;
+      constexpr unique_ptr(unique_ptr<U, E>&& u) noexcept;
     constexpr unique_ptr(nullptr_t) noexcept;
 
     // destructor
-    ~unique_ptr();
+    constexpr ~unique_ptr();
 
     // assignment
-    unique_ptr& operator=(unique_ptr&& u) noexcept;
+    constexpr unique_ptr& operator=(unique_ptr&& u) noexcept;
     template<class U, class E>
-      unique_ptr& operator=(unique_ptr<U, E>&& u) noexcept;
-    unique_ptr& operator=(nullptr_t) noexcept;
+      constexpr unique_ptr& operator=(unique_ptr<U, E>&& u) noexcept;
+    constexpr unique_ptr& operator=(nullptr_t) noexcept;
 
     // \ref{unique.ptr.runtime.observers}, observers
-    T& operator[](size_t i) const;
-    pointer get() const noexcept;
-    deleter_type& get_deleter() noexcept;
-    const deleter_type& get_deleter() const noexcept;
-    explicit operator bool() const noexcept;
+    constexpr T& operator[](size_t i) const;
+    constexpr pointer get() const noexcept;
+    constexpr deleter_type& get_deleter() noexcept;
+    constexpr const deleter_type& get_deleter() const noexcept;
+    constexpr explicit operator bool() const noexcept;
 
     // \ref{unique.ptr.runtime.modifiers}, modifiers
-    pointer release() noexcept;
-    template<class U> void reset(U p) noexcept;
-    void reset(nullptr_t = nullptr) noexcept;
-    void swap(unique_ptr& u) noexcept;
+    constexpr pointer release() noexcept;
+    template<class U> constexpr void reset(U p) noexcept;
+    constexpr void reset(nullptr_t = nullptr) noexcept;
+    constexpr void swap(unique_ptr& u) noexcept;
 
     // disable copy from lvalue
     unique_ptr(const unique_ptr&) = delete;
@@ -9697,7 +9697,7 @@ The template argument \tcode{T} shall be a complete type.
 
 \indexlibraryctor{unique_ptr}%
 \begin{itemdecl}
-template<class U> explicit unique_ptr(U p) noexcept;
+template<class U> constexpr explicit unique_ptr(U p) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9718,8 +9718,8 @@ takes a single parameter of type \tcode{pointer}.
 
 \indexlibraryctor{unique_ptr}%
 \begin{itemdecl}
-template<class U> unique_ptr(U p, @\seebelow@ d) noexcept;
-template<class U> unique_ptr(U p, @\seebelow@ d) noexcept;
+template<class U> constexpr unique_ptr(U p, @\seebelow@ d) noexcept;
+template<class U> constexpr unique_ptr(U p, @\seebelow@ d) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9741,7 +9741,7 @@ take a parameter of type \tcode{pointer} and a second parameter.
 
 \indexlibraryctor{unique_ptr}%
 \begin{itemdecl}
-template<class U, class E> unique_ptr(unique_ptr<U, E>&& u) noexcept;
+template<class U, class E> constexpr unique_ptr(unique_ptr<U, E>&& u) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9769,7 +9769,7 @@ This replaces the \constraints specification of the primary template.
 
 \indexlibrarymember{operator=}{unique_ptr}%
 \begin{itemdecl}
-template<class U, class E> unique_ptr& operator=(unique_ptr<U, E>&& u) noexcept;
+template<class U, class E> constexpr unique_ptr& operator=(unique_ptr<U, E>&& u) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9796,7 +9796,7 @@ This replaces the \constraints specification of the primary template.
 
 \indexlibrarymember{operator[]}{unique_ptr}%
 \begin{itemdecl}
-T& operator[](size_t i) const;
+constexpr T& operator[](size_t i) const;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9815,7 +9815,7 @@ the stored pointer points.
 
 \indexlibrarymember{reset}{unique_ptr}%
 \begin{itemdecl}
-void reset(nullptr_t p = nullptr) noexcept;
+constexpr void reset(nullptr_t p = nullptr) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9826,7 +9826,7 @@ Equivalent to \tcode{reset(pointer())}.
 
 \indexlibrarymember{reset}{unique_ptr}%
 \begin{itemdecl}
-template<class U> void reset(U p) noexcept;
+constexpr template<class U> void reset(U p) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9848,7 +9848,7 @@ the \tcode{reset} member of the primary template.
 
 \indexlibraryglobal{make_unique}%
 \begin{itemdecl}
-template<class T, class... Args> unique_ptr<T> make_unique(Args&&... args);
+template<class T, class... Args> constexpr unique_ptr<T> make_unique(Args&&... args);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9864,7 +9864,7 @@ template<class T, class... Args> unique_ptr<T> make_unique(Args&&... args);
 
 \indexlibraryglobal{make_unique}%
 \begin{itemdecl}
-template<class T> unique_ptr<T> make_unique(size_t n);
+template<class T> constexpr unique_ptr<T> make_unique(size_t n);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9892,7 +9892,7 @@ template<class T, class... Args> @\unspec@ make_unique(Args&&...) = delete;
 
 \indexlibraryglobal{make_unique}%
 \begin{itemdecl}
-template<class T> unique_ptr<T> make_unique_for_overwrite();
+template<class T> constexpr unique_ptr<T> make_unique_for_overwrite();
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9907,7 +9907,7 @@ template<class T> unique_ptr<T> make_unique_for_overwrite();
 
 \indexlibraryglobal{make_unique}%
 \begin{itemdecl}
-template<class T> unique_ptr<T> make_unique_for_overwrite(size_t n);
+template<class T> constexpr unique_ptr<T> make_unique_for_overwrite(size_t n);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9935,7 +9935,7 @@ template<class T, class... Args> @\unspec@ make_unique_for_overwrite(Args&&...) 
 
 \indexlibrary{\idxcode{swap(unique_ptr\&, unique_ptr\&)}}%
 \begin{itemdecl}
-template<class T, class D> void swap(unique_ptr<T, D>& x, unique_ptr<T, D>& y) noexcept;
+template<class T, class D> constexpr void swap(unique_ptr<T, D>& x, unique_ptr<T, D>& y) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -9951,7 +9951,7 @@ Calls \tcode{x.swap(y)}.
 \indexlibrarymember{operator==}{unique_ptr}%
 \begin{itemdecl}
 template<class T1, class D1, class T2, class D2>
-  bool operator==(const unique_ptr<T1, D1>& x, const unique_ptr<T2, D2>& y);
+  constexpr bool operator==(const unique_ptr<T1, D1>& x, const unique_ptr<T2, D2>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -10047,7 +10047,7 @@ template<class T1, class D1, class T2, class D2>
 \indexlibrarymember{operator==}{unique_ptr}%
 \begin{itemdecl}
 template<class T, class D>
-  bool operator==(const unique_ptr<T, D>& x, nullptr_t) noexcept;
+  constexpr bool operator==(const unique_ptr<T, D>& x, nullptr_t) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -10059,9 +10059,9 @@ template<class T, class D>
 \indexlibrarymember{operator<}{unique_ptr}%
 \begin{itemdecl}
 template<class T, class D>
-  bool operator<(const unique_ptr<T, D>& x, nullptr_t);
+  constexpr bool operator<(const unique_ptr<T, D>& x, nullptr_t);
 template<class T, class D>
-  bool operator<(nullptr_t, const unique_ptr<T, D>& x);
+  constexpr bool operator<(nullptr_t, const unique_ptr<T, D>& x);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -10086,9 +10086,9 @@ less<unique_ptr<T, D>::pointer>()(nullptr, x.get())
 \indexlibrarymember{operator>}{unique_ptr}%
 \begin{itemdecl}
 template<class T, class D>
-  bool operator>(const unique_ptr<T, D>& x, nullptr_t);
+  constexpr bool operator>(const unique_ptr<T, D>& x, nullptr_t);
 template<class T, class D>
-  bool operator>(nullptr_t, const unique_ptr<T, D>& x);
+  constexpr bool operator>(nullptr_t, const unique_ptr<T, D>& x);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -10101,9 +10101,9 @@ The second function template returns \tcode{x < nullptr}.
 \indexlibrarymember{operator<=}{unique_ptr}%
 \begin{itemdecl}
 template<class T, class D>
-  bool operator<=(const unique_ptr<T, D>& x, nullptr_t);
+  constexpr bool operator<=(const unique_ptr<T, D>& x, nullptr_t);
 template<class T, class D>
-  bool operator<=(nullptr_t, const unique_ptr<T, D>& x);
+  constexpr bool operator<=(nullptr_t, const unique_ptr<T, D>& x);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -10116,9 +10116,9 @@ The second function template returns \tcode{!(x < nullptr)}.
 \indexlibrarymember{operator>=}{unique_ptr}%
 \begin{itemdecl}
 template<class T, class D>
-  bool operator>=(const unique_ptr<T, D>& x, nullptr_t);
+  constexpr bool operator>=(const unique_ptr<T, D>& x, nullptr_t);
 template<class T, class D>
-  bool operator>=(nullptr_t, const unique_ptr<T, D>& x);
+  constexpr bool operator>=(nullptr_t, const unique_ptr<T, D>& x);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -10132,7 +10132,7 @@ The second function template returns \tcode{!(nullptr < x)}.
 \begin{itemdecl}
 template<class T, class D>
   requires @\libconcept{three_way_comparable}@<typename unique_ptr<T, D>::pointer>
-  compare_three_way_result_t<typename unique_ptr<T, D>::pointer>
+  constexpr compare_three_way_result_t<typename unique_ptr<T, D>::pointer>
     operator<=>(const unique_ptr<T, D>& x, nullptr_t);
 \end{itemdecl}
 
