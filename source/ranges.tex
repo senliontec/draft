@@ -139,6 +139,16 @@ namespace std::ranges {
   template<@\libconcept{range}@ R>
     using borrowed_subrange_t = @\seebelow@;
 
+  // \ref{range.utility.conv}, range conversions
+  template<class C, @\libconcept{input_range}@ R, class... Args> requires (!@\libconcept{view}@<C>)
+    constexpr C to(R&& r, Args&&... args);
+  template<template<class...> class C, @\libconcept{input_range}@ R, class... Args>
+    constexpr auto to(R&& r, Args&&... args) -> @\seebelow@;
+  template<class C, class... Args> requires (!@\libconcept{view}@<C>)
+    constexpr auto to(Args&&... args) -> @\seebelow@;
+  template<template<class...> class C, class... Args>
+    constexpr auto to(Args&&... args) -> @\seebelow@;
+
   // \ref{range.empty}, empty view
   template<class T>
     requires is_object_v<T>
@@ -329,15 +339,6 @@ namespace std::ranges {
     inline constexpr auto @\libmember{keys}{views}@ = elements<0>;
     inline constexpr auto @\libmember{values}{views}@ = elements<1>;
   }
-
-  template<class C, @\libconcept{input_range}@ R, class... Args> requires (!@\libconcept{view}@<C>)
-    constexpr C to(R&& r, Args&&... args);
-  template<template<class...> class C, @\libconcept{input_range}@ R, class... Args>
-    constexpr auto to(R && r, Args&&... args) -> @\seebelow@;
-  template<class C, class... Args> requires (!@\exposid{view}@<C>)
-    constexpr auto to(Args&&... args) -> @\seebelow@;
-  template<template<class...> class C, class... Args>
-    constexpr auto to(Args&&... args) -> @\seebelow@;
 
   // \ref{range.zip}, zip view
   template<@\libconcept{input_range}@... Views>
@@ -2019,7 +2020,7 @@ allowing the conversion of a range of ranges.
 \begin{codeblock}
 string_view str = "the quick brown fox";
 auto words = views::split(str, ' ') | to<vector<string>>();
-// \tcode{words} is vector<string>{"the", "quick", "brown", "fox"}
+// \tcode{words} is \tcode{vector<string>\{"the", "quick", "brown", "fox"\}}
 \end{codeblock}
 \end{example}
 
@@ -2028,7 +2029,7 @@ Let \exposid{reservable-container} be defined as follows:
 \begin{codeblock}
 template<class Container>
 constexpr bool @\exposid{reservable-container}@ =          // \expos
-  sized_range<Container> &&
+  @\libconcept{sized_range}@<Container> &&
   requires(Container& c, range_size_t<Container> n) {
     c.reserve(n);
     { c.capacity() } -> @\libconcept{same_as}@<decltype(n)>;
@@ -2042,8 +2043,8 @@ Let \exposid{container-insertable} be defined as follows:
 template<class Container, class Ref>
 constexpr bool @\exposid{container-insertable}@ =          // \expos
   requires(Container& c, Ref&& ref) {
-      requires (requires { c.push_back(std::forward<Ref>(ref)); } ||
-                requires { c.insert(c.end(), std::forward<Ref>(ref)); });
+    requires (requires { c.push_back(std::forward<Ref>(ref)); } ||
+              requires { c.insert(c.end(), std::forward<Ref>(ref)); });
   };
 \end{codeblock}
 
@@ -2051,7 +2052,7 @@ constexpr bool @\exposid{container-insertable}@ =          // \expos
 Let \exposid{container-inserter} be defined as follows:
 \begin{codeblock}
 template<typename Ref>
-auto @\exposid{container-inserter}@(C & c) {               // \expos
+auto @\exposid{container-inserter}@(C& c) {                // \expos
   if constexpr (requires { c.push_back(declval<Ref>()); })
     return back_inserter(c);
   else
@@ -2068,6 +2069,7 @@ template<class C, @\libconcept{input_range}@ R, class... Args> requires (!@\libc
 \end{itemdecl}
 
 \begin{itemdescr}
+\pnum
 \returns
 An object of type \tcode{C}
 constructed from the elements of \tcode{r} in the following manner:
@@ -2100,7 +2102,7 @@ Otherwise, if
 is \tcode{true}:
 \end{itemize}
 \begin{codeblock}
-C(ranges::begin(r), ranges::end(r), std::forward<Args>(args)...);
+C(ranges::begin(r), ranges::end(r), std::forward<Args>(args)...)
 \end{codeblock}
 \item
 Otherwise, if
@@ -2122,7 +2124,7 @@ ranges::copy(r, @\exposid{container-inserter}@<range_reference_t<R>>(c));
 Otherwise,
 if \tcode{\libconcept{input_range}<range_reference_t<R>>} is \tcode{true}:
 \begin{codeblock}
-to<C>(r | views::transform([](auto &&elem) {
+to<C>(r | views::transform([](auto&& elem) {
   return to<range_value_t<C>>(std::forward<decltype(elem)>(elem));
 }), std::forward<Args>(args)...);
 \end{codeblock}
@@ -2142,7 +2144,7 @@ template<template<class...> class C, @\libconcept{input_range}@ R, class... Args
 \pnum
 Let \exposid{input-iterator} be an exposition-only type:
 \begin{codeblock}
-struct @\exposid{input-iterator}@ {                        //\expos
+struct @\exposid{input-iterator}@ {                        // \expos
   using iterator_category = input_iterator_tag;
   using value_type = range_value_t<R>;
   using difference_type = ptrdiff_t;
@@ -2183,7 +2185,7 @@ otherwise, the program is ill-formed.
 \tcode{to<decltype(\placeholder{DEDUCE_EXPR})>(std::forward<R>(r), std::forward<Args>(args)...)}.
 \end{itemdescr}
 
-\rSec3[range.utility.conv.adapters]{\tcode{ranges::to} adaptors}
+\rSec3[range.utility.conv.adaptors]{\tcode{ranges::to} adaptors}
 
 \indexlibrarymember{to}{ranges}%
 \begin{itemdecl}
