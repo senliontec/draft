@@ -3175,13 +3175,13 @@ the initializations of the state entities of \tcode{E} are all well-formed.
 Given an object \tcode{t} of type \tcode{T}, where
 \begin{itemize}
 \item
-\tcode{t} is a unary function object that accepts a \tcode{range} argument,
+\tcode{t} is a unary function object that accepts a \libconcept{range} argument,
 \item
 \tcode{T} models \tcode{\libconcept{derived_from}<range_adaptor_closure<T>>},
 \item
 \tcode{T} has no other base classes of type \tcode{range_adaptor_closure<U>} for any other type \tcode{U}, and
 \item
-\tcode{T} does not model \tcode{range}
+\tcode{T} does not model \libconcept{range}
 \end{itemize}
 then the implementation ensures
 that \tcode{t} is a range adaptor closure object.
