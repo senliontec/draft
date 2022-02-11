@@ -3055,7 +3055,7 @@ namespace std::ranges {
     }
   };
 
- template<class O, class T>
+  template<class O, class T>
   struct out_value_result {
     [[no_unique_address]] O out;
     [[no_unique_address]] T value;
@@ -6096,7 +6096,7 @@ template<class ExecutionPolicy, class ForwardIterator>
 template<@\libconcept{permutable}@ I, @\libconcept{sentinel_for}@<I> S>
   constexpr subrange<I> ranges::shift_right(I first, S last, iter_difference_t<I> n);
 template<@\libconcept{forward_range}@ R>
-  requires permutable<iterator_t<R>>
+  requires @\libconcept{permutable}@<iterator_t<R>>
   constexpr borrowed_subrange_t<R> ranges::shift_right(R&& r, range_difference_t<R> n);
 \end{itemdecl}
 
@@ -6105,7 +6105,7 @@ template<@\libconcept{forward_range}@ R>
 \expects
 \tcode{n >= 0} is \tcode{true}.
 For the overloads in namespace \tcode{std},
-the type of \tcode{*first} meets the \oldconcept{MoveAssignable} requirements
+the type of \tcode{*first} meets the \oldconcept{MoveAssignable} requirements,
 and \tcode{ForwardIterator} meets
 the \oldconcept{BidirectionalIterator} requirements\iref{bidirectional.iterators} or
 the \oldconcept{ValueSwap\-pable} requirements.
@@ -9176,7 +9176,7 @@ namespace std {
     template<class O, class T>
       using iota_result = out_value_result<O, T>;
 
-    template<@\libconcept{input_or_output_iterator}@ O, @\libconcept{sentinel_fo}@r<O> S, @\libconcept{weakly_incrementable}@ T>
+    template<@\libconcept{input_or_output_iterator}@ O, @\libconcept{sentinel_for}@<O> S, @\libconcept{weakly_incrementable}@ T>
       requires @\libconcept{indirectly_writable}@<O, const T&>
       constexpr iota_result<O, T> iota(O first, S last, T value);
 
