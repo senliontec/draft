@@ -6595,7 +6595,7 @@ Any exception thrown by the initialization of \exposid{val}.
 \indexlibraryctor{unexpected}%
 \begin{itemdecl}
 template<class... Args>
-  constexpr explicit unexpected(in_place_t, Args&&...);
+  constexpr explicit unexpected(in_place_t, Args&&... args);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -6616,7 +6616,7 @@ Any exception thrown by the initialization of \exposid{val}.
 \indexlibraryctor{unexpected}%
 \begin{itemdecl}
 template<class U, class... Args>
-  constexpr explicit unexpected(in_place_t, initializer_list<U>, Args&&...);
+  constexpr explicit unexpected(in_place_t, initializer_list<U> il, Args&&... args);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -6627,7 +6627,7 @@ template<class U, class... Args>
 \pnum
 \effects
 Direct-non-list-initializes
-\exposid{val} with \tcode{std::forward<Args>(args)...}.
+\exposid{val} with \tcode{il, std::forward<Args>(args)...}.
 
 \pnum
 \throws
