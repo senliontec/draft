@@ -7896,12 +7896,12 @@ its result is convertible to \tcode{bool}.
 template<class T, class E> requires is_void_v<T>
 class expected<T, E> {
 public:
-  using @\libmember{value_type}{expected}@ = T;
-  using @\libmember{error_type}{expected}@ = E;
-  using @\libmember{unexpected_type}{expected}@ = unexpected<E>;
+  using @\libmember{value_type}{expected<void>}@ = T;
+  using @\libmember{error_type}{expected<void>}@ = E;
+  using @\libmember{unexpected_type}{expected<void>}@ = unexpected<E>;
 
   template<class U>
-  using @\libmember{rebind}{expected}@ = expected<U, error_type>;
+  using @\libmember{rebind}{expected<void>}@ = expected<U, error_type>;
 
   // \ref{expected.void.ctor}, constructors
   constexpr expected() noexcept;
@@ -7971,7 +7971,7 @@ private:
 
 \rSec3[expected.void.ctor]{Constructors}
 
-\indexlibraryctor{expected}%
+\indexlibraryctor{expected<void>}%
 \begin{itemdecl}
 constexpr expected() noexcept;
 \end{itemdecl}
@@ -7982,7 +7982,7 @@ constexpr expected() noexcept;
 \tcode{has_value()} is \tcode{true}.
 \end{itemdescr}
 
-\indexlibraryctor{expected}%
+\indexlibraryctor{expected<void>}%
 \begin{itemdecl}
 constexpr expected(const expected& rhs);
 \end{itemdecl}
@@ -8011,7 +8011,7 @@ This constructor is trivial
 if \tcode{is_trivially_copy_constructible_v<E>} is \tcode{true}.
 \end{itemdescr}
 
-\indexlibraryctor{expected}%
+\indexlibraryctor{expected<void>}%
 \begin{itemdecl}
 constexpr expected(expected&& rhs) noexcept(is_nothrow_move_constructible_v<E>);
 \end{itemdecl}
@@ -8041,7 +8041,7 @@ This constructor is trivial
 if \tcode{is_trivially_move_constructible_v<E>} is \tcode{true}.
 \end{itemdescr}
 
-\indexlibraryctor{expected}%
+\indexlibraryctor{expected<void>}%
 \begin{itemdecl}
 template<class U, class G>
   constexpr explicit(!is_convertible_v<const G&, E>) expected(const expected<U, G>& rhs);
@@ -8091,7 +8091,7 @@ with \tcode{std::forward<GF>(rhs.er\-ror())}.
 Any exception thrown by the initialization of \exposid{unex}.
 \end{itemdescr}
 
-\indexlibraryctor{expected}%
+\indexlibraryctor{expected<void>}%
 \begin{itemdecl}
 template<class G>
   constexpr explicit(!is_convertible_v<const G&, E>) expected(const unexpected<G>& e);
@@ -8122,7 +8122,7 @@ with \tcode{std::forward<GF>(e.value())}.
 Any exception thrown by the initialization of \exposid{unex}.
 \end{itemdescr}
 
-\indexlibraryctor{expected}%
+\indexlibraryctor{expected<void>}%
 \begin{itemdecl}
 constexpr explicit expected(in_place_t) noexcept;
 \end{itemdecl}
@@ -8133,7 +8133,7 @@ constexpr explicit expected(in_place_t) noexcept;
 \tcode{has_value()} is \tcode{true}.
 \end{itemdescr}
 
-\indexlibraryctor{expected}%
+\indexlibraryctor{expected<void>}%
 \begin{itemdecl}
 template<class... Args>
   constexpr explicit expected(unexpect_t, Args&&... args);
@@ -8158,7 +8158,7 @@ with \tcode{std::forward<Args>(args)...}.
 Any exception thrown by the initialization of \exposid{unex}.
 \end{itemdescr}
 
-\indexlibraryctor{expected}%
+\indexlibraryctor{expected<void>}%
 \begin{itemdecl}
 template<class U, class... Args>
     constexpr explicit expected(unexpect_t, initializer_list<U> il, Args&&... args);
@@ -8185,7 +8185,7 @@ Any exception thrown by the initialization of \exposid{unex}.
 
 \rSec3[expected.void.dtor]{Destructor}
 
-\indexlibrarydtor{expected}%
+\indexlibrarydtor{expected<void>}%
 \begin{itemdecl}
 constexpr ~expected();
 \end{itemdecl}
@@ -8203,7 +8203,7 @@ then this destructor is a trivial destructor.
 
 \rSec3[expected.void.assign]{Assignment}
 
-\indexlibrarymember{operator=}{expected}%
+\indexlibrarymember{operator=}{expected<void>}%
 \begin{itemdecl}
 constexpr expected& operator=(const expected& rhs);
 \end{itemdecl}
@@ -8235,7 +8235,7 @@ This operator is defined as deleted unless
 \tcode{is_copy_constructible_v<E>} is \tcode{true}.
 \end{itemdescr}
 
-\indexlibrarymember{operator=}{expected}%
+\indexlibrarymember{operator=}{expected<void>}%
 \begin{itemdecl}
 constexpr expected& operator=(expected&& rhs) noexcept(@\seebelow@);
 \end{itemdecl}
@@ -8274,7 +8274,7 @@ This operator is defined as deleted unless
 \tcode{is_move_assignable_v<E>} is \tcode{true}.
 \end{itemdescr}
 
-\indexlibrarymember{operator=}{expected}%
+\indexlibrarymember{operator=}{expected<void>}%
 \begin{itemdecl}
 template<class G>
   constexpr expected& operator=(const unexpected<G>& e);
@@ -8311,7 +8311,7 @@ Otherwise, equivalent to:
 \tcode{*this}.
 \end{itemdescr}
 
-\indexlibrarymember{emplace}{expected}%
+\indexlibrarymember{emplace}{expected<void>}%
 \begin{itemdecl}
 constexpr void emplace() noexcept;
 \end{itemdecl}
@@ -8325,7 +8325,7 @@ destroys \exposid{unex} and sets \exposid{has_val} to \tcode{true}.
 
 \rSec3[expected.void.swap]{Swap}
 
-\indexlibrarymember{swap}{expected}%
+\indexlibrarymember{swap}{expected<void>}%
 \begin{itemdecl}
 constexpr void swap(expected& rhs) noexcept(@\seebelow@);
 \end{itemdecl}
@@ -8371,7 +8371,7 @@ The exception specification is
 \tcode{is_nothrow_move_constructible_v<E> \&\& is_nothrow_swappable_v<E>}.
 \end{itemdescr}
 
-\indexlibrarymember{swap}{expected}%
+\indexlibrarymember{swap}{expected<void>}%
 \begin{itemdecl}
 friend constexpr void swap(expected& x, expected& y) noexcept(noexcept(x.swap(y)));
 \end{itemdecl}
@@ -8384,8 +8384,8 @@ Equivalent to \tcode{x.swap(y)}.
 
 \rSec3[expected.void.obs]{Observers}
 
-\indexlibrarymember{operator bool}{expected}%
-\indexlibrarymember{has_value}{expected}%
+\indexlibrarymember{operator bool}{expected<void>}%
+\indexlibrarymember{has_value}{expected<void>}%
 \begin{itemdecl}
 constexpr explicit operator bool() const noexcept;
 constexpr bool has_value() const noexcept;
@@ -8397,7 +8397,7 @@ constexpr bool has_value() const noexcept;
 \exposid{has_val}.
 \end{itemdescr}
 
-\indexlibrarymember{operator*}{expected}%
+\indexlibrarymember{operator*}{expected<void>}%
 \begin{itemdecl}
 constexpr void operator*() const noexcept;
 \end{itemdecl}
@@ -8419,7 +8419,7 @@ constexpr void value() const&;
 \tcode{bad_expected_access(error())} if \tcode{has_value()} is \tcode{false}.
 \end{itemdescr}
 
-\indexlibrarymember{value}{expected}%
+\indexlibrarymember{value}{expected<void>}%
 \begin{itemdecl}
 constexpr void value() &&;
 \end{itemdecl}
@@ -8431,7 +8431,7 @@ constexpr void value() &&;
 if \tcode{has_value()} is \tcode{false}.
 \end{itemdescr}
 
-\indexlibrarymember{error}{expected}%
+\indexlibrarymember{error}{expected<void>}%
 \begin{itemdecl}
 constexpr const E& error() const&;
 constexpr E& error() &;
@@ -8447,7 +8447,7 @@ constexpr E& error() &;
 \exposid{unex}.
 \end{itemdescr}
 
-\indexlibrarymember{error}{expected}%
+\indexlibrarymember{error}{expected<void>}%
 \begin{itemdecl}
 constexpr E&& error() &&;
 constexpr const E&& error() const&&;
@@ -8465,7 +8465,7 @@ constexpr const E&& error() const&&;
 
 \rSec3[expected.void.eq]{Equality operators}
 
-\indexlibrarymember{operator==}{expected}%
+\indexlibrarymember{operator==}{expected<void>}%
 \begin{itemdecl}
 template<class T2, class E2> requires is_void_v<T2>
   friend constexpr bool operator==(const expected& x, const expected<T2, E2>& y);
@@ -8483,7 +8483,7 @@ If \tcode{x.has_value()} does not equal \tcode{y.has_value()}, \tcode{false};
 otherwise \tcode{x.has_value() || static_cast<bool>(x.error() == y.error())}.
 \end{itemdescr}
 
-\indexlibrarymember{operator==}{expected}%
+\indexlibrarymember{operator==}{expected<void>}%
 \begin{itemdecl}
 template<class E2>
   constexpr bool operator==(const expected& x, const unexpected<E2>& e);
