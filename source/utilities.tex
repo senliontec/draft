@@ -6629,6 +6629,7 @@ template<class U, class... Args>
 Direct-non-list-initializes
 \exposid{val} with \tcode{std::forward<Args>(args)...}.
 
+\pnum
 \throws
 Any exception thrown by the initialization of \exposid{val}.
 \end{itemdescr}
@@ -6723,7 +6724,7 @@ namespace std {
     E& error() & noexcept;
     const E& error() const& noexcept;
     E&& error() && noexcept;
-    const E&&  error() const&& noexcept;
+    const E&& error() const&& noexcept;
   private:
     E @\exposid{val}@;              // \expos
   };
@@ -7002,6 +7003,7 @@ This constructor is defined as deleted unless
 \tcode{is_copy_constructible_v<E>} is \tcode{true}.
 \end{itemize}
 
+\pnum
 This constructor is trivial if
 \begin{itemize}
 \item
@@ -7052,9 +7054,9 @@ is_nothrow_move_constructible_v<E>}.
 This constructor is trivial if
 \begin{itemize}
 \item
-is_trivially_move_constructible_v<T> is \tcode{true}; and
+\tcode{is_trivially_move_constructible_v<T>} is \tcode{true}; and
 \item
-is_trivially_move_constructible_v<E> is \tcode{true}.
+\tcode{is_trivially_move_constructible_v<E>} is \tcode{true}.
 \end{itemize}
 \end{itemdescr}
 
@@ -7465,8 +7467,8 @@ is_nothrow_move_constructible_v<E>}
 is \tcode{true}.
 \end{itemize}
 
-\effects
 \pnum
+\effects
 \begin{itemize}
 \item
 If \tcode{has_value()} is \tcode{true},
@@ -7477,11 +7479,11 @@ Otherwise, equivalent to
 @\exposid{reinit-expected}@(@\exposid{val}@, @\exposid{unex}@, std::forward<U>(v));
 @\exposid{has_val}@ = true;
 \end{codeblock}
+\end{itemize}
 
 \pnum
 \returns
 \tcode{*this}.
-\end{itemize}
 \end{itemdescr}
 
 \indexlibrarymember{operator=}{expected}%
@@ -7511,7 +7513,6 @@ is_nothrow_move_constructible_v<E>} is \tcode{true}.
 
 \pnum
 \effects
-\pnum
 \begin{itemize}
 \item
 If \tcode{has_value()} is \tcode{true}, equivalent to
@@ -7540,6 +7541,7 @@ template<class... Args>
 \constraints
 \tcode{is_nothrow_constructible_v<T, Args...>} is \tcode{true}.
 
+\pnum
 \effects
 Equivalent to:
 \begin{codeblock}
@@ -7565,6 +7567,7 @@ template<class U, class... Args>
 \tcode{is_nothrow_constructible_v<T, initializer_list<U>\&, Args...>}
 is \tcode{true}.
 
+\pnum
 \effects
 Equivalent to:
 \begin{codeblock}
@@ -7724,7 +7727,6 @@ constexpr const T&& operator*() const&& noexcept;
 \indexlibrarymember{operator bool}{expected}%
 \indexlibrarymember{has_value}{expected}%
 \begin{itemdecl}
-\pnum
 constexpr explicit operator bool() const noexcept;
 constexpr bool has_value() const noexcept;
 \end{itemdecl}
@@ -7990,7 +7992,7 @@ constexpr expected(const expected& rhs);
 \begin{itemdescr}
 \pnum
 \effects
-If \tcode{rhs.has_value()} is \tcode{false}
+If \tcode{rhs.has_value()} is \tcode{false},
 direct-non-list-initializes \exposid{unex} with \tcode{rhs.error()}.
 
 \pnum
@@ -8023,7 +8025,7 @@ constexpr expected(expected&& rhs) noexcept(is_nothrow_move_constructible_v<E>);
 
 \pnum
 \effects
-If rhs.has_value() is \tcode{false},
+If \tcode{rhs.has_value()} is \tcode{false},
 direct-non-list-initializes \exposid{unex} with \tcode{std::move(rhs.error())}.
 
 \pnum
@@ -8153,6 +8155,7 @@ with \tcode{std::forward<Args>(args)...}.
 \ensures
 \tcode{has_value()} is \tcode{false}.
 
+\pnum
 \throws
 Any exception thrown by the initialization of \exposid{unex}.
 \end{itemdescr}
@@ -8360,9 +8363,11 @@ destroy_at(addressof(rhs.@\exposid{unex}@));
 rhs.@\exposid{has_val}@ = true;
 \end{codeblock}
 
+\pnum
 \throws
 Any exception thrown by the expressions in the \effects.
 
+\pnum
 \remarks
 The exception specification is
 \tcode{is_nothrow_move_constructible_v<E> \&\& is_nothrow_swappable_v<E>}.
@@ -8454,6 +8459,7 @@ constexpr const E&& error() const&&;
 \expects
 \tcode{has_value()} is \tcode{false}.
 
+\pnum
 \returns
 \tcode{std::move(\exposid{unex})}.
 \end{itemdescr}
@@ -8490,6 +8496,7 @@ template<class E2>
 The expression \tcode{x.error() == e.value()} is well-formed and
 its result is convertible to \tcode{bool}.
 
+\pnum
 \returns
 \tcode{!x.has_value() \&\& static_cast<bool>(x.error() == e.value())}.
 \end{itemdescr}
