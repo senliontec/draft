@@ -878,9 +878,10 @@ The expression inside \keyword{explicit} is equivalent to:
 !is_convertible_v<decltype(get<1>(@\exposid{FWD}@(p))), T2>
 \end{codeblock}
 The constructor is defined as deleted if
-\tcode{reference_constructs_from_temporary_v<first_type, decltype(get<0>(FWD(p)))>}
-is \tcode{true} or
-\tcode{reference_constructs_from_temporary_v<second_type, decltype(get<1>(FWD(p)))>}
+\begin{codeblock}
+reference_constructs_from_temporary_v<first_type, decltype(get<0>(@\exposid{FWD}@(p)))> ||
+reference_constructs_from_temporary_v<second_type, decltype(get<1>(@\exposid{FWD}@(p)))>
+\end{codeblock}
 is \tcode{true}.
 \end{itemdescr}
 
@@ -14305,8 +14306,8 @@ if \tcode{R} is \cv{}~\keyword{void}, otherwise
 \tcode{\placeholdernc{INVOKE}(f, t$_1$, t$_2$, $\dotsc$, t$_N$)} implicitly converted
 to \tcode{R}.
 If
-\tcode{reference_converts_from_temporary_v<R, decltype(\placeholdernc{INVOKE}(f, t$_1$, t$_2$, $\dotsc$, t$_N$)}
-is true,
+\tcode{reference_converts_from_temporary_v<R, decltype(\placeholdernc{INVOKE}(f, t$_1$, t$_2$, $\dotsc$, t$_N$))>}
+is \tcode{true},
 \tcode{\placeholdernc{INVOKE}<R>(f, t$_1$, t$_2$, $\dotsc$, t$_N$)}
 is ill-formed.
 
@@ -17753,11 +17754,11 @@ namespace std {
     inline constexpr bool has_unique_object_representations_v
       = has_unique_object_representations<T>::value;
   template<class T, class U>
-    inline constexpr bool @\libglobal{reference_constructs_from_temporary_v}@ =
-      reference_constructs_from_temporary<T, U>::value;
+    inline constexpr bool @\libglobal{reference_constructs_from_temporary_v}@
+      = reference_constructs_from_temporary<T, U>::value;
   template<class T, class U>
-    inline constexpr bool @\libglobal{reference_converts_from_temporary_v}@ =
-      reference_converts_from_temporary<T, U>::value;
+    inline constexpr bool @\libglobal{reference_converts_from_temporary_v}@
+      = reference_converts_from_temporary<T, U>::value;
 
   // \ref{meta.unary.prop.query}, type property queries
   template<class T>
@@ -18441,6 +18442,25 @@ The compilation of the
   otherwise \seebelow. &
   \tcode{T} shall be a complete type, \cv{}~\keyword{void}, or
   an array of unknown bound. \\ \rowsep
+
+\indexlibraryglobal{reference_constructs_from_temporary}%
+\tcode{template<class T>}\br
+  \tcode{struct reference_constructs_from_temporary;} &
+  \tcode{conjunction_v<is_reference<T>, is_constructible<T, U>>}
+  is \tcode{true}, and
+  the initialization \tcode{T t(\exposid{VAL}<U>);} binds \tcode{t} to
+  a temporary object whose lifetime is extended\iref{class.temporary}. &
+  \tcode{T} and \tcode{U} shall be
+  complete types, \cv{}~\keyword{void}, or arrays of unknown bound.  \\ \rowsep
+
+\indexlibraryglobal{reference_converts_from_temporary}%
+\tcode{template<class T>}\br
+  \tcode{struct reference_converts_from_temporary;} &
+  \tcode{conjunction_v<is_reference<T>, is_convertible<U, T>>} is \tcode{true},
+  and the initialization \tcode{T t = \exposid{VAL}<U>;} binds \tcode{t} to
+  a temporary object whose lifetime is extended\iref{class.temporary}. &
+  \tcode{T} and \tcode{U} shall be
+  complete types, \cv{}~\keyword{void}, or arrays of unknown bound.  \\ \rowsep
 
 \end{libreqtab3b}
 
