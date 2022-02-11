@@ -18444,7 +18444,7 @@ The compilation of the
   an array of unknown bound. \\ \rowsep
 
 \indexlibraryglobal{reference_constructs_from_temporary}%
-\tcode{template<class T>}\br
+\tcode{template<class T, class U>}\br
   \tcode{struct reference_constructs_from_temporary;} &
   \tcode{conjunction_v<is_reference<T>, is_constructible<T, U>>}
   is \tcode{true}, and
@@ -18454,7 +18454,7 @@ The compilation of the
   complete types, \cv{}~\keyword{void}, or arrays of unknown bound.  \\ \rowsep
 
 \indexlibraryglobal{reference_converts_from_temporary}%
-\tcode{template<class T>}\br
+\tcode{template<class T, class U>}\br
   \tcode{struct reference_converts_from_temporary;} &
   \tcode{conjunction_v<is_reference<T>, is_convertible<U, T>>} is \tcode{true},
   and the initialization \tcode{T t = \exposid{VAL}<U>;} binds \tcode{t} to
